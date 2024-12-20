@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hoja de Validación</title>
     <link rel="stylesheet" type="text/css" href="ISI.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <nav class="navbar">
@@ -54,10 +55,12 @@
                     <tr>
                         <td>Cliente</td>
                         <td><input type="text" name="No. Cliente" placeholder="¿Quién es el cliente?"/></td> 
+                        <td>No.Cliente</td>
                     </tr>
                     <tr>
                         <td>Solicita</td>
                         <td><input type="text" name="ID_empleado" placeholder="¿Qué solicita?"/></td> 
+                        <td><input type="number" name="No.Cliente" placeholder="¿Cuál es el número del cliente?"/></td>
                     </tr>
                     <tr>
                         <td>Zona</td>
@@ -98,20 +101,15 @@
                  <table border="1"> 
                     <tr>
                         <td>Fecha</td>
-                        <td><input type="date" name="No. Cliente" placeholder="¿Quién es el cliente"/></td> 
+                        <td><input type="date" name="No. Cliente" placeholder="¿Quién es el cliente?"/></td> 
                     </tr>
                     <tr>
                         <td>Porcentaje Utilidad</td>
-                        <td><input type="text" name="Unidad"/></td>
+                        <td><input type="text" id="porcentajeUtilidad" name="porcentajeUtilidad" readonly/></td>
                     </tr>
-
                  </table>
-  
-
              </div>
- 
             <p></p>
-
             <div class="input-list">
                 <div class="input-container">
                     <label for="falla">Falla reportada</label>
@@ -142,17 +140,16 @@
                     <th>Total</th>
                 </tr>
                 <tr>
-                    <td><input type="text" name="input0_row1" /></td>
+                    <td><input type="text" name="input0_row1" oninput="calculateTotal(this)" /></td>
                     <td><input type="text" name="input1_row1" /></td> 
                     <td><input type="text" name="input2_row1" /></td>
                     <td><input type="text" name="input3_row1" /></td> 
-                    <td><input type="text" name="input3_row1" /></td> 
-                    <td><input type="text" name="input4_row1" onchange="sumarCostos()" /></td> 
-                    <td><input type="text" name="input3_row1" /></td> 
-                    <td><input type="text" name="input4_row1" onchange="sumarCostos()" /></td> 
+                    <td><input type="text" name="input4_row1" oninput="calculateTotal(this)" /></td> 
+                    <td><input type="text" name="input5_row1" readonly /></td> 
+                    <td><input type="text" name="input6_row1" oninput="calculateTotal(this)" /></td> 
+                    <td><input type="text" name="input7_row1" readonly /></td> 
                 </tr> 
             </table>
-           
             <!-- Botones -->
             <div class="button-container">
                 <button class="add" type="button" onclick="addRow()">+</button>
@@ -162,147 +159,60 @@
             <table border="1">
                 <tr>
                     <td><b>Total Refacciones</b></td>
-                    <td><input type="text" id="totalMonto" name="totalMonto" readonly/></td> 
+                    <td><input type="text" id="totalRefacciones" name="totalRefacciones" readonly/></td> 
                 </tr>
             </table>
 
-            <table id="dynamicTable"> 
+            <!-- Tabla de Mano de Obra -->
+            <table id="laborTable" border="1"> 
                 <tr>
-                    <th>Mano de obra</th>
+                    <th colspan="6"><b><center>Mano de Obra</center></b></th>
+                </tr>
+                <tr>
+                    <th>Cantidad</th>
+                    <th>UM</th>
+                    <th>Descripción</th>
+                    <th>Factura</th>
+                    <th>Precio Unitario</th>
                     <th>Total</th>
                 </tr>
                 <tr>
-                    <td><input type="text" name="input0_row1" /></td>
-                    <td><input type="text" name="input4_row1" onchange="sumarCostos()" /></td> 
+                    <td><input type="text" name="laborInput0_row1" oninput="calculateLaborTotal(this)" /></td>
+                    <td><input type="text" name="laborInput1_row1" /></td> 
+                    <td><input type="text" name="laborInput2_row1" /></td>
+                    <td><input type="text" name="laborInput3_row1" /></td> 
+                    <td><input type="text" name="laborInput4_row1" oninput="calculateLaborTotal(this)" /></td> 
+                    <td><input type="text" name="laborInput5_row1" readonly /></td> 
                 </tr> 
-            </table> 
-
-            <table border="1">
-                <tr>
-                    <td><b>Subtotal</b></td>
-                    <td><input type="text" id="totalMonto" name="totalMonto" readonly/></td> 
-                </tr>
-                <tr>
-
-                    <td><b>IVA</b></td>
-                    <td><input type="text" id="totalMonto" name="totalMonto" readonly/></td> 
-                </tr>
-                <tr>
-                    <td><b>Total</b></td>
-                    <td><input type="text" id="totalMonto" name="totalMonto" readonly/></td> 
-                </tr>
             </table>
+
+            <!-- Botones de Mano de Obra -->
+            <div class="button-container">
+                <button class="add" type="button" onclick="addLaborRow()">+</button>
+                <button class="remove" type="button" onclick="removeLaborRow()">-</button>
+            </div>
+
             <table border="1">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><b>Subtotal</b></td>
+                    <td><input type="text" id="subtotal" name="subtotal" readonly/></td> 
+                </tr>
                 <tr>
                     <td><b>Inversión total</b></td>
-                    <td><input type="text" id="totalMonto" name="totalMonto" readonly/></td> 
+                    <td><input type="text" id="inversionTotal" name="inversionTotal" readonly/></td> 
+                    <td><b>IVA</b></td>
+                    <td><input type="text" id="iva" name="iva" readonly/></td> 
                 </tr>
                 <tr>
-
                     <td><b>Ganancia</b></td>
-                    <td><input type="text" id="totalMonto" name="totalMonto" readonly/></td> 
+                    <td><input type="text" id="ganancia" name="ganancia" readonly/></td> 
+                    <td><b>Total</b></td>
+                    <td><input type="text" id="total" name="total" readonly/></td> 
                 </tr>
             </table>
         </form>
     </div>
-
-    <script>
-        const scriptURL = "https://docs.google.com/spreadsheets/d/1zvMdQj8Ud3i5o59_VkBGNbBVX5jHe8lO_ZwnhZdfcLU/edit?usp=sharing";
-        const form = document.forms['google-sheet'];
-
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
-            .then(response => alert('¡Registro exitoso!'))
-                .catch(error => console.error('Error al cargar la información', error.message));
-        });
-
-        function addRow(tableId = "dynamicTable") {
-            var table = document.getElementById(tableId);
-            var row = table.insertRow(-1);
-            for (var i = 0; i < 5; i++) { // Ajustado a 5 para incluir la columna "Costo"
-                var cell = row.insertCell(i);
-                cell.innerHTML = `<input type="text" name="${tableId}_input${i}_row${table.rows.length - 1}" onchange="sumarCostos()" />`;
-            }
-            sumarCostos(); // Actualiza la suma al agregar una nueva fila
-        }
-
-        function removeRow(tableId = "dynamicTable") {
-            var table = document.getElementById(tableId);
-            var rowCount = table.rows.length;
-            if (rowCount > 2) {
-                table.deleteRow(-1);
-                sumarCostos(); // Actualiza la suma al eliminar una fila
-            } else {
-                alert('No se puede eliminar la fila inicial.');
-            }
-        }
-
-        function sumarCostos() {
-            var tables = document.querySelectorAll('table');
-            var total = 0;
-
-            tables.forEach(function(table) {
-                for (var i = 1; i < table.rows.length; i++) { // Comienza en 1 para omitir el encabezado
-                    var cells = table.rows[i].cells;
-                    if (cells.length > 4) {
-                        var costo = cells[4].getElementsByTagName("input")[0].value;
-                        total += parseFloat(costo) || 0; // Suma y convierte el valor a número
-                    }
-                }
-            });
-
-            document.getElementById("totalMonto").value = total.toFixed(2); // Muestra el total en la tabla "Monto"
-        }
-
-        function addTable() {
-            var container = document.querySelector('.container');
-            var tableContainer = document.createElement('div');
-            tableContainer.classList.add('table-container');
-
-            var newTable = document.createElement('table');
-            var tableId = `newTable_${document.querySelectorAll('.table-container').length + 1}`;
-            newTable.id = tableId;
-            newTable.border = "1";
-
-            var headerRow = newTable.insertRow();
-            var headers = ["Cantidad", "UM", "Descripción", "P.U.", "Costo"];
-            headers.forEach(function(header) {
-                var cell = document.createElement('th');
-                cell.textContent = header;
-                headerRow.appendChild(cell);
-            });
-
-            // Añadir una fila de ejemplo
-            var exampleRow = newTable.insertRow();
-            for (var i = 0; i < headers.length; i++) {
-                var cell = exampleRow.insertCell();
-                cell.innerHTML = `<input type="text" name="${tableId}_input${i}_row0" onchange="sumarCostos()" />`;
-            }
-
-            // Añadir botones de agregar y quitar fila
-            var buttonContainer = document.createElement('div');
-            buttonContainer.classList.add('button-container');
-            buttonContainer.innerHTML = `
-                <button class="add" type="button" onclick="addRow('${tableId}')">+</button>
-                <button class="remove" type="button" onclick="removeRow('${tableId}')">-</button>
-            `;
-
-            tableContainer.appendChild(newTable);
-            tableContainer.appendChild(buttonContainer);
-            container.appendChild(tableContainer);
-        }
-
-        function removeTable() {
-            var container = document.querySelector('.container');
-            var tables = container.querySelectorAll('.table-container');
-            if (tables.length > 0) { 
-                container.removeChild(tables[tables.length - 1]);
-                sumarCostos(); // Actualiza la suma al eliminar una tabla
-            } else {
-                alert('No hay tablas adicionales para eliminar.');
-            }
-        }
-    </script>
 </body>
 </html>
